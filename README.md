@@ -1,1 +1,3 @@
 # beatclay
+
+I'm working on cheeky little IoT project. More info coming soon...
