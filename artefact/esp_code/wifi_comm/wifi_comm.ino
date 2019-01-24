@@ -8,58 +8,77 @@
 
   Note that this sketch uses LED_BUILTIN to find the pin with the internal LED
 */
+#include <Arduino.h>
+
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+#include <ESP8266WiFiMulti.h>
+#include <WebSocketClient.h>
+#include <Hash.h>
+#include <ArduinoOTA.h>  
 
-ESP8266WebServer server(80);  
-
-const char* host = "64.233.187.99"; // Google //"192.168.56.1";  // IP serveur - Server IP
+char host[] = "192.168.1.16"; // Google //"192.168.56.1";  // IP serveur - Server IP
+char path[] = "8765";
 const int   port = 80;            // Port serveur - Server Port
-const int   watchdog = 5000;        // Fréquence du watchdog - Watchdog frequency
-unsigned long previousMillis = millis(); 
+WebSocketClient webSocketClient;
+WiFiClient client;
 
 void setup() {
   Serial.begin(57600);
   Serial.print("Connecting to network");
+  // byte module_IP[] = {192, 168, 56, 17};
+  IPAddress ip(192, 168, 1, 17);
+  IPAddress gateway(192, 168, 1, 1); 
+  Serial.print(F("Setting static ip to : "));
+  Serial.println(ip);
+  IPAddress subnet(255, 255, 255, 0);
+  WiFi.config(ip, gateway, subnet);
+  //WiFi.config(ip);
 //  pinMode(2, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
-  WiFi.begin("DESKTOP-GH9KF48 7814", ",00964Wp");
+  WiFi.begin("your_ssid", "your_network_password");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");}
-  Serial.println("WiFi connected");  
-  Serial.println("IP address: ");
+  Serial.println("Connected to network");
   Serial.println(WiFi.localIP());
-  server.on("/Python", handlePath); //C:\Users\ushin\COMP3710
-  server.begin();    
+  if(client.connect(host, 80)) {
+    Serial.println("Connected");
+  }else {
+    Serial.println("Connection to server failed.");
+  }
+  webSocketClient.path = path;
+  webSocketClient.host = host;
+  if (webSocketClient.handshake(client)) {
+    Serial.println("Handshake successful");
+  } else {
+    Serial.println("Handshake failed.");
+  }
   Serial.println("Server listening");
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  server.handleClient();
-//  unsigned long currentMillis = millis();
-//
-//  if ( currentMillis - previousMillis > watchdog ) {
-//    previousMillis = currentMillis;
-//    WiFiClient client;
-//  
-//    if (!client.connect(host, port)) {
-//      Serial.println(client.connect(host, port));
-//      Serial.println("connection failed");
-//      return;
-//    }
-//    
+  String data;
+ 
+  if (client.connected()) {
+ 
+    webSocketClient.sendData("Yooooo");
+ 
+    webSocketClient.getData(data);
+    if (data.length() > 0) {
+      Serial.print("Received data: ");
+      Serial.println(data);
+    }
+ 
+  } else {
+    Serial.println("Client disconnected.");
   }
-
-void handlePath() { //Handler for the path
-
-    server.send(200, "text/plain", "Hello Python");
-
+ 
+  delay(3000);
+  
 }
-//  digitalWrite(2, LOW);   // Turn the LED on (Note that LOW is the voltage level
-  // but actually the LED is on; this is because
-  // it is active low on the ESP-01)
-//  delay(1000);                      // Wait for a second
-//  digitalWrite(2, HIGH);  // Turn the LED off by making the voltage HIGH
-//  delay(2000);                      // Wait for two seconds (to demonstrate the active low LED)
+
+//void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+//
+//  Serial.println("in Websocketevent")
+//
 //}
