@@ -1,7 +1,5 @@
 
 
-//  WifiMulti.addAP("Ushini's iPhone", "9bjvv359ssoaq");
-
 /*
  * WebSocketClient.ino
  *
@@ -12,146 +10,182 @@
 #include <Arduino.h>
 
 #include <ESP8266WiFi.h>
+#include <Wire.h>
+#include <WiFiUDP.h>
 #include <ESP8266WiFiMulti.h>
 #include <WebSocketsClient.h>
 #include <Hash.h>
-#include <ArduinoOTA.h>
+//#include <ArduinoOTA.h>
+
+// MPU6050 Slave Device Address
+const uint8_t MPU6050SlaveAddress = 0x68;
+
+// Select SDA and SCL pins for I2C communication 
+const uint8_t scl = D6;
+const uint8_t sda = D7;
+
+// sensitivity scale factor respective to full scale setting provided in datasheet 
+const uint16_t AccelScaleFactor = 16384;
+const uint16_t GyroScaleFactor = 131;
+
+// MPU6050 few configuration register addresses
+const uint8_t MPU6050_REGISTER_SMPLRT_DIV   =  0x19;
+const uint8_t MPU6050_REGISTER_USER_CTRL    =  0x6A;
+const uint8_t MPU6050_REGISTER_PWR_MGMT_1   =  0x6B;
+const uint8_t MPU6050_REGISTER_PWR_MGMT_2   =  0x6C;
+const uint8_t MPU6050_REGISTER_CONFIG       =  0x1A;
+const uint8_t MPU6050_REGISTER_GYRO_CONFIG  =  0x1B;
+const uint8_t MPU6050_REGISTER_ACCEL_CONFIG =  0x1C;
+const uint8_t MPU6050_REGISTER_FIFO_EN      =  0x23;
+const uint8_t MPU6050_REGISTER_INT_ENABLE   =  0x38;
+const uint8_t MPU6050_REGISTER_ACCEL_XOUT_H =  0x3B;
+const uint8_t MPU6050_REGISTER_SIGNAL_PATH_RESET  = 0x68;
+
+int16_t AccelX, AccelY, AccelZ, Temperature, GyroX, GyroY, GyroZ;
 
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
-#define USE_SERIAL Serial
-
-#define photo A0
-
-const unsigned long duracionCicloLed = 5000;
-unsigned long tiempoUltimoCiclo = 0;
-boolean ledStatus;
-int hayLuz;
+const unsigned long duration = 5000;
+unsigned long last_cycle = 0;
+WiFiClient client;
 
 void setup() {
-  USE_SERIAL.begin(57600);
+  Serial.begin(57600);
 
   //Serial.setDebugOutput(true);
-  USE_SERIAL.setDebugOutput(true);
+  Serial.setDebugOutput(true);
 
-  USE_SERIAL.println();
-  USE_SERIAL.println("Inicio Cliente WebSocket");
-  USE_SERIAL.println();
-  
-  ota();
+  WiFiMulti.addAP("Ushini's iPhone", "acshauend418)3!-&/schoolschoolschool");
 
-  for(uint8_t t = 4; t > 0; t--) {
-    USE_SERIAL.printf("[SETUP] BOOT WAIT %d...\n", t);
-    USE_SERIAL.flush();
-    delay(1000);
-  }
-
-  WiFiMulti.addAP("Ushini's iPhone", "9bjvv359ssoaq");
-
-  //WiFi.disconnect();
   while(WiFiMulti.run() != WL_CONNECTED) {
     delay(100);
   }
 
   // server address, port and URL
-  webSocket.begin("172.20.10.3", 8882, "/");//otro esp server
+//  webSocket.begin("172.20.10.3", 8882, "/");
+//  webSocket.onEvent(webSocketEvent);
+//  webSocket.setReconnectInterval(5000);
 
-  // event handler
-  webSocket.onEvent(webSocketEvent);
+  Wire.begin(sda, scl);
+  MPU6050_Init();
+//  WiFiUDP.begin("172.20.10.3", 8882)
 
-  // use HTTP Basic Authorization this is optional remove if not needed
-  //webSocket.setAuthorization("user", "Password");
-
-  // try ever 5000 again if connection has failed
-  webSocket.setReconnectInterval(5000);
-
+  client.connect("172.20.10.3", 8882);
+  
 }
 
 void loop() {
-  ArduinoOTA.handle();
+//  ArduinoOTA.handle();
+
+ 
+  double Ax, Ay, Az, T, Gx, Gy, Gz;
   
-  webSocket.loop();
-  if(cumpleCiclo()){
-    char p[32];
-    //sprintf(p, "photo:%i", hayLuz);
-    webSocket.sendTXT(p);
+  Read_RawValue(MPU6050SlaveAddress, MPU6050_REGISTER_ACCEL_XOUT_H);
+  
+  //divide each with their sensitivity scale factor
+  Ax = (int)AccelX/AccelScaleFactor;
+  Ay = (int)AccelY/AccelScaleFactor;
+  Az = (int)AccelZ/AccelScaleFactor;
+  T = (int)Temperature/340+36.53; //temperature formula
+  Gx = (int)GyroX/GyroScaleFactor;
+  Gy = (int)GyroY/GyroScaleFactor;
+  Gz = (int)GyroZ/GyroScaleFactor;
+
+//  webSocket.loop();
+  if(client.connected()){
+//    if(completeCycle()){
+        String p = String(Ax)+" "+String(Ay)+" "+String(Az)+" "+String(Gx)+" "+String(Gy)+" "+String(Gz)+" ";
+        Serial.println(p);
+        client.print(p);
+        client.flush();
+//        webSocket.sendTXT();
+//        webSocket.sendTXT(p);
+      
+//    }
   }
+  else {
+    Serial.println("connection failure");
+  }
+
+  delay(10);
+//  client.stop();
 }
 
-boolean cumpleCiclo(){
-  boolean cumple = false;
+boolean completeCycle(){
+  boolean complete = false;
   unsigned long tiempo = millis();
   
-  if(millis() - tiempoUltimoCiclo >= duracionCicloLed){
-    tiempoUltimoCiclo = millis();
-    cumple = true;
-    // hayLuz = analogRead(photo);
+  if(millis() - last_cycle >= duration){
+    last_cycle = millis();
+    complete = true;
   }
-  return cumple;
+  return complete;  
 }
 
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+//void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+//  Serial.println("entered websocket event handler");
 
-  switch(type) {
-    case WStype_DISCONNECTED:
-      USE_SERIAL.printf("[WSc] Disconnected!\n");
-      break;
-    case WStype_CONNECTED: {
-      USE_SERIAL.printf("[WSc] Connected to url: %s\n", payload);
+//  switch(type) {
+//    case WStype_DISCONNECTED:
+//      Serial.printf("[WSc] Disconnected!\n");
+//      break;
+//    case WStype_CONNECTED: {
+//      Serial.printf("[WSc] Connected to url: %s\n", payload);
+//
+//      // send message to server when Connected
+////      webSocket.sendTXT("flava flav");
+//      break;
+//    }
+//    case WStype_TEXT:
+//      Serial.printf("[WSc] get text: %s\n", payload);
+//
+//      // send message to server
+//      //webSocket.sendTXT("I, client, received messsge and send this back to server");
+//      break;
+//    case WStype_BIN:
+//      Serial.printf("[WSc] get binary length: %u\n", length);
+//      hexdump(payload, length);
+//
+//      // send data to server
+//      // webSocket.sendBIN(payload, length);
+//      break;
+//  }
 
-      // send message to server when Connected
-      webSocket.sendTXT("Connected");
-      break;
-    }
-    case WStype_TEXT:
-      USE_SERIAL.printf("[WSc] get text: %s\n", payload);
+//}
 
-      // send message to server
-      //webSocket.sendTXT("I, client, received messsge and send this back to server");
-      break;
-    case WStype_BIN:
-      USE_SERIAL.printf("[WSc] get binary length: %u\n", length);
-      hexdump(payload, length);
-
-      // send data to server
-      // webSocket.sendBIN(payload, length);
-      break;
-  }
-
+void MPU6050_Init(){
+  delay(150);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_SMPLRT_DIV, 0x07);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_PWR_MGMT_1, 0x01);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_PWR_MGMT_2, 0x00);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_CONFIG, 0x00);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_GYRO_CONFIG, 0x00);//set +/-250 degree/second full scale
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_ACCEL_CONFIG, 0x00);// set +/- 2g full scale
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_FIFO_EN, 0x00);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_INT_ENABLE, 0x01);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_SIGNAL_PATH_RESET, 0x00);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_USER_CTRL, 0x00);
 }
 
-void ota(){
+void Read_RawValue(uint8_t deviceAddress, uint8_t regAddress){
+  Wire.beginTransmission(deviceAddress);
+  Wire.write(regAddress);
+  Wire.endTransmission();
+  Wire.requestFrom(deviceAddress, (uint8_t)14);
+  AccelX = (((int16_t)Wire.read()<<8) | Wire.read());
+  AccelY = (((int16_t)Wire.read()<<8) | Wire.read());
+  AccelZ = (((int16_t)Wire.read()<<8) | Wire.read());
+  Temperature = (((int16_t)Wire.read()<<8) | Wire.read());
+  GyroX = (((int16_t)Wire.read()<<8) | Wire.read());
+  GyroY = (((int16_t)Wire.read()<<8) | Wire.read());
+  GyroZ = (((int16_t)Wire.read()<<8) | Wire.read());
+}
 
-// Port defaults to 8266
-// ArduinoOTA.setPort(8266);
-
-// Hostname defaults to esp8266-[ChipID]
-// ArduinoOTA.setHostname("myesp8266");
-
-// No authentication by default
-// ArduinoOTA.setPassword((const char *)"123");
-
-  ArduinoOTA.onStart([]() {
-    Serial.println("Start");
-  });
-  ArduinoOTA.onEnd([]() {
-    Serial.println("\nEnd");
-  });
-  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-  });
-  ArduinoOTA.onError([](ota_error_t error) {
-    Serial.printf("Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-    else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-    else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-    else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-    else if (error == OTA_END_ERROR) Serial.println("End Failed");
-  });
-  ArduinoOTA.begin();
-  Serial.println("OTA ready");
-  //Serial.print("IP address: ");
-  //Serial.println(WiFi.localIP());
+void I2C_Write(uint8_t deviceAddress, uint8_t regAddress, uint8_t data){
+  Wire.beginTransmission(deviceAddress);
+  Wire.write(regAddress);
+  Wire.write(data);
+  Wire.endTransmission();
 }
