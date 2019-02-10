@@ -1,0 +1,16 @@
+
+(sys:load "libs/external/instruments_ext.xtm")
+(sys:load "libs/external/audio_dsp_ext.xtm")
+(sys:load "libs/external/midi.xtm")
+(sys:load "libs/core/looper.xtm")
+(sys:load "libs/core/instruments/analogue_midi.xtm")
+(sys:load "libs/core/pc_ivl.xtm")
+
+(make-instrument syn1 analogue)
+
+(bind-func dsp:DSP
+  (lambda (in time chan dat)
+    (if (< chan 2)
+        (syn1 in time chan dat))))
+
+(dsp:set! dsp)
