@@ -15,14 +15,28 @@
 #include <ESP8266WiFiMulti.h>
 #include <WebSocketsClient.h>
 #include <Hash.h>
+#include "I2Cdev.h"
+#include "MPU6050.h"
+#include "Servo.h"
+ 
+#define SERVOPIN 16
 //#include <ArduinoOTA.h>
 
 // MPU6050 Slave Device Address
 const uint8_t MPU6050SlaveAddress = 0x68;
 
 // Select SDA and SCL pins for I2C communication 
-const uint8_t scl = D6;
-const uint8_t sda = D7;
+const uint8_t scl = 14; //D5  
+const uint8_t sda = 12; //D6
+
+MPU6050 mpu;
+ 
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+
+Servo myservo;
+int val;
+int prevVal;
 
 // sensitivity scale factor respective to full scale setting provided in datasheet 
 const uint16_t AccelScaleFactor = 16384;
@@ -71,6 +85,11 @@ void setup() {
   MPU6050_Init();
 //  WiFiUDP.begin("172.20.10.3", 8882)
 
+  Serial.println("Initialize MPU");
+  mpu.initialize();
+  Serial.println(mpu.testConnection() ? "Connected" : "Connection failed");
+  myservo.attach(SERVOPIN);
+  
   client.connect("172.20.10.3", 8882);
   
 }
@@ -83,20 +102,24 @@ void loop() {
   
   Read_RawValue(MPU6050SlaveAddress, MPU6050_REGISTER_ACCEL_XOUT_H);
   
+  mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+  Serial.println("AcX: "+String(ax)+" AcY: "+String(ay)+" Acz: "+String(az)+" GyX: "+String(gx)+" GyY: "+String(gy)+" Gyz: "+String(gz));
+  
   //divide each with their sensitivity scale factor
-  Ax = (int)AccelX/AccelScaleFactor;
-  Ay = (int)AccelY/AccelScaleFactor;
-  Az = (int)AccelZ/AccelScaleFactor;
-  T = (int)Temperature/340+36.53; //temperature formula
-  Gx = (int)GyroX/GyroScaleFactor;
-  Gy = (int)GyroY/GyroScaleFactor;
-  Gz = (int)GyroZ/GyroScaleFactor;
+  Ax = (double)AccelX/AccelScaleFactor;
+  Ay = (double)AccelY/AccelScaleFactor;
+  Az = (double)AccelZ/AccelScaleFactor;
+  T = (double)Temperature/340+36.53; //temperature formula
+  Gx = (double)GyroX/GyroScaleFactor;
+  Gy = (double)GyroY/GyroScaleFactor;
+  Gz = (double)GyroZ/GyroScaleFactor;
 
 //  webSocket.loop();
   if(client.connected()){
 //    if(completeCycle()){
-        String p = String(Ax)+" "+String(Ay)+" "+String(Az)+" "+String(Gx)+" "+String(Gy)+" "+String(Gz)+" ";
-        Serial.println(p);
+        Serial.println("AcX: "+String(ax)+" AcY: "+String(ay)+" Acz: "+String(az)+" GyX: "+String(gx)+" GyY: "+String(gy)+" Gyz: "+String(gz));
+        String p = String(ax)+" "+String(ay)+" "+String(az)+" "+String(gx)+" "+String(gy)+" "+String(gz)+" ";
+//        Serial.println(p);
         client.print(p);
         client.flush();
 //        webSocket.sendTXT();
@@ -123,42 +146,10 @@ boolean completeCycle(){
   return complete;  
 }
 
-
-//void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
-//  Serial.println("entered websocket event handler");
-
-//  switch(type) {
-//    case WStype_DISCONNECTED:
-//      Serial.printf("[WSc] Disconnected!\n");
-//      break;
-//    case WStype_CONNECTED: {
-//      Serial.printf("[WSc] Connected to url: %s\n", payload);
-//
-//      // send message to server when Connected
-////      webSocket.sendTXT("flava flav");
-//      break;
-//    }
-//    case WStype_TEXT:
-//      Serial.printf("[WSc] get text: %s\n", payload);
-//
-//      // send message to server
-//      //webSocket.sendTXT("I, client, received messsge and send this back to server");
-//      break;
-//    case WStype_BIN:
-//      Serial.printf("[WSc] get binary length: %u\n", length);
-//      hexdump(payload, length);
-//
-//      // send data to server
-//      // webSocket.sendBIN(payload, length);
-//      break;
-//  }
-
-//}
-
 void MPU6050_Init(){
   delay(150);
   I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_SMPLRT_DIV, 0x07);
-  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_PWR_MGMT_1, 0x01);
+  I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_PWR_MGMT_1, 0x00);
   I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_PWR_MGMT_2, 0x00);
   I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_CONFIG, 0x00);
   I2C_Write(MPU6050SlaveAddress, MPU6050_REGISTER_GYRO_CONFIG, 0x00);//set +/-250 degree/second full scale
