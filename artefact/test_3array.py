@@ -35,9 +35,10 @@ def client_routine(id, connection):
         if(not str(data.decode())==''):
             print(str(id)+" received data "+str(data.decode()))
         # should this be in a try catch
-            data = data.decode().strip().split(" ")
-            data = np.array([float(i) for i in data]) #np.array(list(map(float, data)))
-            data = np.absolute(data)
+            data = data.decode()
+            data = data.strip().split(" ")
+            data = data[0:6]
+            data = np.array([int(i) for i in data]) #np.array(list(map(float, data)))
             sensor_data_buff[id] = data
     connection.close()
 
@@ -49,17 +50,20 @@ def calcParam(connection):
     global min_volume
     global tempo_range 
     global min_tempo
-    max_accel = 16
-    max_gyro = 2000
+    max_accel = 8000
+    max_gyro = 10000
     # weights = np.random.dirichlet(np.ones(6), size=1)
     while True:
         if(not num_connections == 0):
-            time.sleep(5)
-            accum_data = sensor_data_buff.sum(axis=0)
-            tempo_array = accum_data[0:3]/max_accel
-            volume_array = accum_data[3:6]/max_gyro
-            new_tempo = int(tempo_range*np.amax(tempo_array))+min_tempo
-            new_vol = int(vol_range*np.amax(volume_array))+min_volume
+            time.sleep(random.randint(0,5))
+            accum_data = np.divide(sensor_data_buff.sum(axis=0), num_connections)
+            accel_array = np.divide(np.absolute(accum_data[0:3]), max_accel)
+            gyro_array = np.divide(accum_data[3:6], max_gyro)
+            new_tempo = int(tempo_range*np.amax(accel_array))+min_tempo
+            if(np.absolute(np.amin(gyro_array)) > np.amax(gyro_array)):
+                new_vol = int(vol_range*np.amin(gyro_array))+min_volume
+            else:
+                new_vol = int(vol_range*np.amax(gyro_array))+min_volume
             param_data = str(new_tempo)+" "+str(new_vol)
             print("sending to extmp extention...")
             # first integer is tempo and the second it volume.
