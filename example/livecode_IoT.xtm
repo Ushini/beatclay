@@ -1,4 +1,0 @@
-(define *metro* (make-metro 80))
-(define volu 0)
-
-(:> A 2 0 (play syn1 @1 90 dur) (reverse `(60 63 67 72)))
