@@ -1,0 +1,38 @@
+{
+    "comments": {
+        // symbol used for single line comment
+        "lineComment": ";"
+    },
+    // symbols used as brackets
+    "brackets": [
+        ["{", "}"],
+        ["[", "]"],
+        ["(", ")"],
+        ["<", ">"]
+    ],
+    // symbols that are auto closed when typing
+    "autoClosingPairs": [
+        ["{", "}"],
+        ["[", "]"],
+        ["(", ")"],
+        ["<", ">"],
+        ["\"", "\""]
+    ],
+    /*
+    "indentationRules": {
+        "increaseIndentPattern": "\\(([^()]|(?R))*",
+        "decreaseIndentPattern": "\\)"
+        //"indentNextLinePattern": "",
+        //"unIndentedLinePattern": ""
+    },
+    */
+    // symbols that that can be used to surround a selection
+    "surroundingPairs": [
+        ["{", "}"],
+        ["[", "]"],
+        ["(", ")"],
+        ["<", ">"],
+        ["\"", "\""],
+        ["'", "'"]
+    ]
+}
