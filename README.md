@@ -4,7 +4,23 @@ A smart bracelet making moving to music more engaging. This device was built to 
 ## Getting Started
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
 
-0. Begin by cloning the repository.
+##### Hardware Requirements: 
+- nodeMCU v0.9 with ESP12E wifi module or ESP8266 (Lolin and Amica were used in this project)
+- Arduino MPU6050 
+
+##### Software Requirements: 
+- Python 3.6.3
+    - pip
+    - pipenv
+    - numpy 
+    - websockets
+- npm and yo code for vscode extension install
+- Extempore Live Coding environment
+- CH340G driver for Lolin microcontroller OR CP2101 driver for the Amica board
+- vscode editor
+
+
+Begin by cloning the repository.
 
 #### Microcontroller setup
 1. Connect the hardware components according to the image below. Power can be supplied via USB or battery (3v to 3.6v) 
@@ -18,6 +34,7 @@ There are three components to this project. The microcontroller client-code, the
 
 #### Python setup
 1. If you haven't already, you will need to install [Python](https://www.python.org/downloads/) and [pip](https://www.makeuseof.com/tag/install-pip-for-python/) on your machine.
+2. Run `pip install pipenv` to install pipenv.
 2. Create a virtual env with Python 3.6.3 by running the following command within the src directory. 
     `pipenv --python 3.6.3`
 3. Activate your virtual environment with `pipenv shell` and install the following dependencies with `pip install <dependency-name>`.
@@ -35,13 +52,7 @@ There are three components to this project. The microcontroller client-code, the
 
 The vscode extension will update the value of *vol1* and the tempo of *\*metro\**, so this naming convention is important. Use the variable *vol1* in place of any volume value you wish to control with beatclays.
 
-Hardware You will need: 
-- nodeMCU v0.9 with ESP12E wifi module or ESP8266 (Lolin and Amica were used in this project)
-- Arduino MPU6050 
+## Developers
 
-Software tools: 
-- python 
-- npm and yo code for vscode extension install
-- extempore language
-- CH340G driver for Lolin microcontroller OR CP2101 driver for the Amica board
-
+## Contact Information
+For any questions regarding this project, contact me on 
