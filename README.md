@@ -42,9 +42,9 @@ Begin by cloning the repository.
     - websockets
 
 #### Extension Setup
-1. This device is used in conjunction with the Extempore live coding environment. [Install](https://extemporelang.github.io/docs/overview/install/) and setup the Extempore environment and refer to the [Extempore Documentation](https://extemporelang.github.io/docs/) for guides and examples. A very simple example of a looped C minor arpeggio chord has been provided in the examples diretory. To run this, begin an Extempore session and evaluate the setup.xtm code and the livecode_IoT.xtm code (either all at once or line by line). 
-2. Install [vscode](https://code.visualstudio.com/docs/setup/setup-overview).
-3. Install the extension in vscode by running `code --install-extension my-extension-0.0.1.vsix` from the root directory of this repo. This extension is a modified version of the vscode-extempore 0.0.9 extension.
+1. Install [vscode].
+2. This device is used in conjunction with the Extempore live coding environment. [Install](https://extemporelang.github.io/docs/overview/install/) and setup the Extempore environment and refer to the [Extempore Documentation](https://extemporelang.github.io/docs/) for guides and examples. A very simple example of a looped C minor arpeggio chord has been provided in the examples diretory. To run this, begin an Extempore session and evaluate the setup.xtm code and the livecode_IoT.xtm code (either all at once or line by line). (https://code.visualstudio.com/docs/setup/setup-overview).
+3. Install the extension in vscode by running `code --install-extension vscode-extempore-0.0.9.vsix` from within the vscode-extension directory. This extension is a modified version of the vscode-extempore 0.0.9 extension.
 
 **IMPORTANT NOTE**: the following lines of code must be evaluated in an Extempore session which is intended to be used with beatclays. 
 `(define *metro* (make-metro <tempo-in-bpm>))`
@@ -53,6 +53,12 @@ Begin by cloning the repository.
 The vscode extension will update the value of *vol1* and the tempo of *\*metro\**, so this naming convention is important. Use the variable *vol1* in place of any volume value you wish to control with beatclays.
 
 ## Developers
+If you wish to contribute to this project, fork this project and clone. Follow the instructions above and get everything running. In order to make changes to the extension code, you must:
+1. Install [Node.js](https://nodejs.org/en/download/).
+2. run `npm install` within the extension directory. This will install all the dependencies the extension requires.
+3. Open the extension folder in vscode. `Crt`+`f5` will run the extension in a new window.
+4. The extension can be packaged into a vsix file by installing vsce with `npm install -g vsce`. Run `vsce package` within the extension root directory.
+5. For other packing methods, see this [link](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
 
 ## Contact Information
 For any questions regarding this project, contact me on 
