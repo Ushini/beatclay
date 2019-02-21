@@ -4,19 +4,32 @@ A smart bracelet making moving to music more engaging. This device was built to 
 ## Getting Started
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
 
+0. Begin by cloning the repository.
+
+#### Microcontroller setup
+1. Connect the hardware components according to the image below. Power can be supplied via USB or battery (3v to 3.6v) 
+2. To deploy code to microcontroller, you need to install the [Arduino IDE](https://www.arduino.cc/en/main/software). 
+3. Install the board manager for ESP8266 in the Arduino IDE. Here are some [instructions](https://www.instructables.com/id/Steps-to-Setup-Arduino-IDE-for-NODEMCU-ESP8266-WiF/) on how to do that.
+4. Install the appropriate drivers for your microcontroller. The drivers for the [Lolin](https://sparks.gogo.co.nz/ch340.html) and [Amica](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers) nodeMCU boards were used in this project. 
+5. Connect the board to your machine and navigate to Tools > Port in your Arduino IDE. Select the port for your device driver. This port number can be found under Device Manager > Ports.
+6. Set the Upload Speed (Tools > Upload Speed) to 57600bps. 
+7. Verify, then upload the code to the board. 
+
 #### Python setup
-1. clone the repository
-2. You will need to set up a virtual env within the src folder. I used [pipenv](https://pipenv.readthedocs.io/en/latest/) with python 3.6. 
-3. Activate your virtual environment and install the following dependencies. (You may need to install [pip](https://www.makeuseof.com/tag/install-pip-for-python/) if you haven't already.) 
+1. If you haven't already, you will need to install [Python](https://www.python.org/downloads/) and [pip](https://www.makeuseof.com/tag/install-pip-for-python/) on your machine.
+2. Create a virtual env with Python 3.6.3 by running the following command within the src directory. 
+    `pipenv --python 3.6.3`
+3. Activate your virtual environment with `pipenv shell` and install the following dependencies with `pip install <dependency-name>`.
     - numpy
     - websockets
 
 Hardware You will need: 
-- nodeMCU v0.9 with ESP12E wifi module or ESP8266
+- nodeMCU v0.9 with ESP12E wifi module or ESP8266 (Lolin and Amica were used in this project)
 - Arduino MPU6050 
 
 Software tools: 
 - python 
 - npm and yo code for vscode extension install
 - extempore language
+- CH340G driver for Lolin microcontroller OR CP2101 driver for the Amica board
 
