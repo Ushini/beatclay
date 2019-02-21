@@ -149,6 +149,9 @@ export function activate(context: vscode.ExtensionContext) {
                 volCode = "(set! vol1 10)"
                 vscode.window.setStatusBarMessage(volCode);
             }
+            vscode.window.showInformationMessage(tempCode + ", " + volCode);
+            sendToProcess(tempCode)
+            sendToProcess(volCode)
         });
         _bcSocket.on('close', () => {
             vscode.window.setStatusBarMessage(`Disconnected from beatclay server on port ${bcPort} closed`);
