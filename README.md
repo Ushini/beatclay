@@ -53,12 +53,15 @@ Begin by cloning the repository.
 The vscode extension will update the value of *vol1* and the tempo of *\*metro\**, so this naming convention is important. Use the variable *vol1* in place of any volume value you wish to control with beatclays.
 
 ## Developers
-If you wish to contribute to this project, fork this project and clone. Follow the instructions above and get everything running. In order to make changes to the extension code, you must:
+If you wish to contribute to this project, fork this project and clone it. Follow the instructions above and get everything running. It would be helpful to have a remote versions for the project which points to original project so you can stay up to date on any changes. `git remote add upstream <repo-URL>` In order to make changes to the extension code, you must:
 1. Install [Node.js](https://nodejs.org/en/download/).
 2. run `npm install` within the extension directory. This will install all the dependencies the extension requires.
 3. Open the extension folder in vscode. `Crt`+`f5` will run the extension in a new window.
 4. The extension can be packaged into a vsix file by installing vsce with `npm install -g vsce`. Run `vsce package` within the extension root directory.
 5. For other packing methods, see this [link](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
+6. Submit a pull request.
+
+## License
 
 ## Contact Information
 For any questions regarding this project, contact me on 
