@@ -23,6 +23,17 @@ There are three components to this project. The microcontroller client-code, the
     - numpy
     - websockets
 
+#### Extension Setup
+1. This device is used in conjunction with the Extempore live coding environment. [Install](https://extemporelang.github.io/docs/overview/install/) and setup the Extempore environment and refer to the [Extempore Documentation](https://extemporelang.github.io/docs/) for guides and examples. A very simple example of a looped C minor arpeggio chord has been provided in the examples diretory. To run this, begin an Extempore session and evaluate the setup.xtm code and the livecode_IoT.xtm code (either all at once or line by line). 
+2. Install [vscode](https://code.visualstudio.com/docs/setup/setup-overview).
+3. Install the extension in vscode by running `code --install-extension my-extension-0.0.1.vsix` from the root directory of this repo. This extension is a modified version of the vscode-extempore 0.0.9 extension.
+
+**IMPORTANT NOTE**: the following lines of code must be evaluated in an Extempore session which is intended to be used with beatclays. 
+`(define *metro* (make-metro <tempo-in-bpm>))`
+`(define vol1 60)`. 
+
+The vscode extension will update the value of *vol1* and the tempo of *\*metro\**, so this naming convention is important. Use the variable *vol1* in place of any volume value you wish to control with beatclays.
+
 Hardware You will need: 
 - nodeMCU v0.9 with ESP12E wifi module or ESP8266 (Lolin and Amica were used in this project)
 - Arduino MPU6050 
