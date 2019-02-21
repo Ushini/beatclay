@@ -106,7 +106,58 @@ export function activate(context: vscode.ExtensionContext) {
             }
         });
         context.subscriptions.push(indentDisposable2);
+
     }
+    let handleBcConnection = vscode.commands.registerCommand('extension.bcconnect', () => {
+        let _bcSocket: net.Socket;
+        let bcPort = 5005
+        let bcIP = "172.20.10.3"
+        _bcSocket = new net.Socket();
+        _bcSocket.setEncoding('ascii');
+        _bcSocket.setKeepAlive(true);
+    
+        // set socket callbacks
+        _bcSocket.connect(bcPort, bcIP, () => {
+            vscode.window.showInformationMessage(`Connected to beatclay server on port ${bcPort}`);
+        });
+        _bcSocket.on('data', (data) => {
+            let params = data.toString('utf8').split(" ");
+            let tempCode = ""
+            let volCode = ""
+            vscode.window.setStatusBarMessage(data.toString());
+            if (parseInt(params[0]) < 180 && parseInt(params[0]) > 10) {
+                tempCode = "(*metro* 'set-tempo "+params[0]+")"
+                vscode.window.setStatusBarMessage(tempCode);
+            }
+            if (parseInt(params[0]) > 180) {
+                tempCode = "(*metro* 'set-tempo 180)"
+                vscode.window.setStatusBarMessage(tempCode);
+            }
+            if (parseInt(params[0]) < 10) {
+                tempCode = "(*metro* 'set-tempo 10)"
+                vscode.window.setStatusBarMessage(tempCode);
+            }
+            if (parseInt(params[1]) < 100 && parseInt(params[1]) > 10) {
+                volCode = "(set! vol1 "+params[1]+")"
+                vscode.window.setStatusBarMessage(volCode);
+            }
+            if (parseInt(params[1]) > 100) {
+                volCode = "(set! vol1 100)"
+                vscode.window.setStatusBarMessage(volCode);
+            }
+            if (parseInt(params[1]) < 10) {
+                volCode = "(set! vol1 10)"
+                vscode.window.setStatusBarMessage(volCode);
+            }
+        });
+        _bcSocket.on('close', () => {
+            vscode.window.setStatusBarMessage(`Disconnected from beatclay server on port ${bcPort} closed`);
+        });
+        _bcSocket.on('error', (err) => {
+            vscode.window.showErrorMessage(`beatclay: socket connection error "${err.message}"`);
+        })
+    });
+    context.subscriptions.push(handleBcConnection);
 }
 
 export function dispose() {

@@ -21,7 +21,8 @@
 		"onCommand:extension.xtmeval",
 		"onCommand:extension.xtmdisconnect",
 		"onCommand:extension.xtmhelp",
-		"onLanguage:extempore"
+		"onLanguage:extempore", 
+		"onCommand:extension.bcconnect"
 	],
 	"main": "./out/extension",
 	"contributes": {
@@ -112,6 +113,10 @@
 			{
 				"command": "extension.xtmhelp",
 				"title": "Extempore: Help"
+			}, 
+			{
+				"command": "extension.bcconnect",
+				"title": "Connect beatclay"
 			}
 		]
 	},
