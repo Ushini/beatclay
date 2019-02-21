@@ -8,6 +8,7 @@ There are three components to this project. The microcontroller client-code, the
 
 #### Microcontroller setup
 1. Connect the hardware components according to the image below. Power can be supplied via USB or battery (3v to 3.6v) 
+![Circuit Diagram](/assets/readme_images/connect_accelto_node.jpg "Circuit Diagram")
 2. To deploy code to microcontroller, you need to install the [Arduino IDE](https://www.arduino.cc/en/main/software). 
 3. Install the board manager for ESP8266 in the Arduino IDE. Here are some [instructions](https://www.instructables.com/id/Steps-to-Setup-Arduino-IDE-for-NODEMCU-ESP8266-WiF/) on how to do that.
 4. Install the appropriate drivers for your microcontroller. The drivers for the [Lolin](https://sparks.gogo.co.nz/ch340.html) and [Amica](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers) nodeMCU boards were used in this project. 
