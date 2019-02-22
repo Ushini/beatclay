@@ -1,6 +1,8 @@
 # beatclay
 A smart bracelet making moving to music more engaging. This device was built to enhance an audience's collective interaction with a live coding performance. By aggregating and mapping accelerometer and gyroscope data to tempo and volume parameters in the live coding environment, the audience can drive elements of the music in real-time. The device also aims to create engaging interaction within audience members, as the level of synchronicity in their movements affect the intensity of the effects in the music.
 
+![beatclayImage](/assets/readme_images/bc2.jpg "beatclay")
+
 ## Getting Started
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
 
@@ -62,6 +64,15 @@ If you wish to contribute to this project, fork this project and clone it. Follo
 6. Submit a pull request.
 
 ## License
+Copyright 2019 Ushini Attanayake
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## Contact Information
 For any questions regarding this project, contact me on 
