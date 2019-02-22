@@ -11,7 +11,7 @@ server_IP = '172.20.10.3'
 sensor_PORT = 8882
 address = (server_IP, sensor_PORT)
 vol_range = 50
-min_volume = 40
+min_volume = 50
 tempo_range = 60
 min_tempo = 60
 max_num_devices = 3
@@ -50,22 +50,22 @@ def calcParam(connection):
     global min_volume
     global tempo_range 
     global min_tempo
-    max_accel = 8000
+    max_accel = 10000
     max_gyro = 10000
     # weights = np.random.dirichlet(np.ones(6), size=1)
     while True:
         if(not num_connections == 0):
             time.sleep(random.randint(0,5))
-            accum_data = np.divide(sensor_data_buff.sum(axis=0), num_connections)
+            accum_data = np.divide(sensor_data_buff.sum(axis=0), 3)
             accel_array = np.divide(np.absolute(accum_data[0:3]), max_accel)
             gyro_array = np.divide(accum_data[3:6], max_gyro)
-            new_tempo = int(tempo_range*np.amax(accel_array))+min_tempo
+            new_tempo = num_connections*int(tempo_range*np.amax(accel_array))/3+min_tempo
             if(np.absolute(np.amin(gyro_array)) > np.amax(gyro_array)):
-                new_vol = int(vol_range*np.amin(gyro_array))+min_volume
+                new_vol = num_connections*int(vol_range*np.amin(gyro_array))/3+min_volume
             else:
                 new_vol = int(vol_range*np.amax(gyro_array))+min_volume
             param_data = str(new_tempo)+" "+str(new_vol)
-            print("sending to extmp extention...")
+            print("sending to extmp extention... "+str(new_tempo)+" "+str(new_vol))
             # first integer is tempo and the second it volume.
             connection.send(param_data.encode())
 

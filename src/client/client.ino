@@ -70,6 +70,8 @@ void setup() {
   //Serial.setDebugOutput(true);
   Serial.setDebugOutput(true);
 
+//  WiFi.enableInsecureWEP();
+
   WiFiMulti.addAP("Ushini's iPhone", "acshauend418)3!-&/schoolschoolschool");
 
   while(WiFiMulti.run() != WL_CONNECTED) {
@@ -77,7 +79,7 @@ void setup() {
   }
 
   // server address, port and URL
-//  webSocket.begin("172.20.10.3", 8882, "/");
+//  webSocket.begin("192.168.1.107, 8882, "/");
 //  webSocket.onEvent(webSocketEvent);
 //  webSocket.setReconnectInterval(5000);
 
