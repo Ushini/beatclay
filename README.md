@@ -5,12 +5,6 @@ A smart bracelet making moving to music more engaging. This device was built to 
   <img width="70%" height="70%" src="/assets/readme_images/bc3.jpg">
 </p>
 
-<iframe src="https://player.vimeo.com/video/319236814" width="640" height="1138" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-<p><a href="https://vimeo.com/319236814">Volume Demo</a> from <a href="https://vimeo.com/user94933414">Ushini Attanayake</a> on <a href="https://vimeo.com">Vimeo</a>.</p> 
-
-<iframe src="https://player.vimeo.com/video/319236886" width="640" height="1138" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-<p><a href="https://vimeo.com/319236886">Tempo Demo</a> from <a href="https://vimeo.com/user94933414">Ushini Attanayake</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
-
 ## Getting Started
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
 
@@ -71,6 +65,9 @@ If you wish to contribute to this project, fork this project and clone it. Follo
 5. For other packing methods, see this [link](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
 6. Submit a pull request.
 
+## Demos Videos
+[Volume Demo](https://player.vimeo.com/video/319236814)
+[Tempo Demo](https://player.vimeo.com/video/319236814)
 ## License
 Copyright 2019 Ushini Attanayake
 
