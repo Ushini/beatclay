@@ -9,7 +9,7 @@ A smart bracelet making moving to music more engaging. This device was built to 
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
 
 ##### Hardware Requirements: 
-- nodeMCU v0.9 with ESP12E wifi module or ESP8266 (Lolin and Amica were used in this project)
+- nodeMCU v0.9 with ESP8266 ESP12E WiFi module (Lolin and Amica were used in this project)
 - Arduino MPU6050 
 
 ##### Software Requirements: 
@@ -18,7 +18,7 @@ There are three components to this project. The microcontroller client-code, the
     - pipenv
     - numpy 
     - websockets
-- npm and yo code for vscode extension install
+- Node.js for vscode extension install
 - Extempore Live Coding environment
 - CH340G driver for Lolin microcontroller OR CP2101 driver for the Amica board
 - vscode editor
@@ -66,8 +66,9 @@ If you wish to contribute to this project, fork this project and clone it. Follo
 6. Submit a pull request.
 
 ## Demos Videos
-[Volume Demo](https://player.vimeo.com/video/319236814)
-[Tempo Demo](https://player.vimeo.com/video/319236814)
+- [Volume Demo](https://player.vimeo.com/video/319236814)
+- [Tempo Demo](https://player.vimeo.com/video/319236814)
+
 ## License
 Copyright 2019 Ushini Attanayake
 
