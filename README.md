@@ -5,16 +5,11 @@ A smart bracelet making moving to music more engaging. This device was built to 
   <img width="70%" height="70%" src="/assets/readme_images/bc3.jpg">
 </p>
 
-<iframe src="https://player.vimeo.com/video/319236814" frameborder="0" scrolling="yes"                           
-                                style="height: 100%; 
-                                            width: 49%; float: center; " height="100%" width="49%"
-                               align="middle">
-                              </iframe>  
+<iframe src="https://player.vimeo.com/video/319236814" width="640" height="1138" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<p><a href="https://vimeo.com/319236814">Volume Demo</a> from <a href="https://vimeo.com/user94933414">Ushini Attanayake</a> on <a href="https://vimeo.com">Vimeo</a>.</p> 
 
- <iframe src="https://player.vimeo.com/video/319236886" frameborder="0" scrolling="yes"  
-                                    style="overflow: hidden; height: 100%; width: 49%; float: center; " 
-                                    height="100%" width="49%"         align="middle">
-                                    </iframe>
+<iframe src="https://player.vimeo.com/video/319236886" width="640" height="1138" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<p><a href="https://vimeo.com/319236886">Tempo Demo</a> from <a href="https://vimeo.com/user94933414">Ushini Attanayake</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
 ## Getting Started
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
