@@ -5,7 +5,7 @@ A smart bracelet making moving to music more engaging. This device was built to 
   <img width="70%" height="70%" src="/assets/readme_images/bc3.jpg">
 </p>
 
-## Getting Started
+## Setup
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
 
 ##### Hardware Requirements: 
@@ -17,7 +17,6 @@ There are three components to this project. The microcontroller client-code, the
     - pip
     - pipenv
     - numpy 
-    - websockets
 - Node.js for vscode extension install
 - Extempore Live Coding environment
 - CH340G driver for Lolin microcontroller OR CP2101 driver for the Amica board
@@ -41,14 +40,21 @@ Begin by cloning the repository.
 2. Run `pip install pipenv` to install pipenv.
 2. Create a virtual env with Python 3.6.3 by running the following command within the src directory. 
     `pipenv --python 3.6.3`
-3. Activate your virtual environment with `pipenv shell` and install the following dependencies with `pip install <dependency-name>`.
-    - numpy
-    - websockets
+3. Activate your virtual environment with `pipenv shell` and install numpy with `pip install numpy`.
 
 #### Extension Setup
 1. Install [vscode].
 2. This device is used in conjunction with the Extempore live coding environment. [Install](https://extemporelang.github.io/docs/overview/install/) and setup the Extempore environment and refer to the [Extempore Documentation](https://extemporelang.github.io/docs/) for guides and examples. A very simple example of a looped C minor arpeggio chord has been provided in the examples diretory. To run this, begin an Extempore session and evaluate the setup.xtm code and the livecode_IoT.xtm code (either all at once or line by line). (https://code.visualstudio.com/docs/setup/setup-overview).
 3. Install the extension in vscode by running `code --install-extension vscode-extempore-0.0.9.vsix` from within the vscode-extension directory. This extension is a modified version of the vscode-extempore 0.0.9 extension.
+
+## Getting Started
+Once you have setup everything, open the examples folder in your vscode editor.
+
+1. Start an Extempore session in your editor and evaluate the code in the setup.xtm file and the synthLoop.xtm file.
+2. From within the src directory, activate the virtual environment with `pipenv shell` and run `python server.py "<IP address of server>" <client connection port>` from the command line.
+3. Open the command pallete within your editor and type "beatclay connect".
+4. Switch on your devices and voila, you're good to go.
+
 
 **IMPORTANT NOTE**: the following lines of code must be evaluated in an Extempore session which is intended to be used with beatclays. 
 `(define *metro* (make-metro <tempo-in-bpm>))`
@@ -62,7 +68,7 @@ If you wish to contribute to this project, fork this project and clone it. Follo
 2. run `npm install` within the extension directory. This will install all the dependencies the extension requires.
 3. Open the extension folder in vscode. `Crt`+`f5` will run the extension in a new window.
 4. The extension can be packaged into a vsix file by installing vsce with `npm install -g vsce`. Run `vsce package` within the extension root directory.
-5. For other packing methods, see this [link](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
+5. For other packaging methods, see this [link](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
 6. Submit a pull request.
 
 ## Demos Videos
@@ -81,4 +87,4 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## Contact Information
-For any questions regarding this project, contact me on 
+For any questions regarding this project, contact me on ushini@gmail.com 
