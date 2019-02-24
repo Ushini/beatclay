@@ -5,7 +5,7 @@ A smart bracelet making moving to music more engaging. This device was built to 
   <img width="70%" height="70%" src="/assets/readme_images/bc3.jpg">
 </p>
 
- <iframe src="https://player.vimeo.com/video/319236814" frameborder="0" scrolling="yes"                           
+<iframe src="https://player.vimeo.com/video/319236814" frameborder="0" scrolling="yes"                           
                                 style="height: 100%; 
                                             width: 49%; float: center; " height="100%" width="49%"
                                align="middle">
@@ -15,6 +15,7 @@ A smart bracelet making moving to music more engaging. This device was built to 
                                     style="overflow: hidden; height: 100%; width: 49%; float: center; " 
                                     height="100%" width="49%"         align="middle">
                                     </iframe>
+
 ## Getting Started
 There are three components to this project. The microcontroller client-code, the python server-code and the modified extempore vscode extension. 
 
