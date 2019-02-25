@@ -1,14 +1,36 @@
-import asyncio
-# from _thread import *
+'''
+Copyright 2019 Ushini Attanayake
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, 
+this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, 
+this list of conditions and the following disclaimer in the documentation and/or 
+other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+'''
+
 import threading
-import websockets
+import sys
 import numpy as np
 import random
 import time
 import socket 
 
-server_IP = '172.20.10.3' 
-sensor_PORT = 8882
+server_IP = sys.argv[1] 
+sensor_PORT = sys.argv[2] 
 address = (server_IP, sensor_PORT)
 vol_range = 50
 min_volume = 50
@@ -16,9 +38,7 @@ tempo_range = 60
 min_tempo = 60
 max_num_devices = 3
 num_connections = 0
-# num_updates = 0
-# device_id = 0
-# weights = np.random.dirichlet(np.ones(6), size=1)
+
 sensor_data_buff = np.zeros((3,6))
 threads = []
 sensor_connected = False
@@ -34,11 +54,10 @@ def client_routine(id, connection):
         data = connection.recv(1024)
         if(not str(data.decode())==''):
             print(str(id)+" received data "+str(data.decode()))
-        # should this be in a try catch
             data = data.decode()
             data = data.strip().split(" ")
             data = data[0:6]
-            data = np.array([int(i) for i in data]) #np.array(list(map(float, data)))
+            data = np.array([int(i) for i in data]) 
             sensor_data_buff[id] = data
     connection.close()
 
@@ -50,9 +69,9 @@ def calcParam(connection):
     global min_volume
     global tempo_range 
     global min_tempo
-    max_accel = 10000
+    max_accel = 20000
     max_gyro = 10000
-    # weights = np.random.dirichlet(np.ones(6), size=1)
+    
     while True:
         if(not num_connections == 0):
             time.sleep(random.randint(0,5))
@@ -66,7 +85,7 @@ def calcParam(connection):
                 new_vol = int(vol_range*np.amax(gyro_array))+min_volume
             param_data = str(new_tempo)+" "+str(new_vol)
             print("sending to extmp extention... "+str(new_tempo)+" "+str(new_vol))
-            # first integer is tempo and the second it volume.
+            # first integer is tempo and the second is volume.
             connection.send(param_data.encode())
 
 def newDeviceConn(connection, address, id):
@@ -74,9 +93,6 @@ def newDeviceConn(connection, address, id):
     threads.append(c_thread)
     c_thread.start()
     print("started new device thread on address: "+str(address))
-
-# start_server = websockets.serve(newDeviceConn, sensor_IP, sensor_PORT)
-
 
 try:
     extemp_sock.bind(extemp_address)
