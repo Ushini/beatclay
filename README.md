@@ -45,7 +45,7 @@ Begin by cloning the repository.
 #### Extension Setup
 1. Install [vscode].
 2. This device is used in conjunction with the Extempore live coding environment. [Install](https://extemporelang.github.io/docs/overview/install/) and setup the Extempore environment and refer to the [Extempore Documentation](https://extemporelang.github.io/docs/) for guides and examples. A very simple example of a looped C minor arpeggio chord has been provided in the examples diretory. To run this, begin an Extempore session and evaluate the setup.xtm code and the livecode_IoT.xtm code (either all at once or line by line). (https://code.visualstudio.com/docs/setup/setup-overview).
-3. Install the extension in vscode by running `code --install-extension vscode-extempore-0.0.9.vsix` from within the vscode-extension directory. This extension is a modified version of the vscode-extempore 0.0.9 extension.
+3. Install the extension in vscode by running `code --install-extension vscode-extempore-0.0.9.vsix` from within the vscode-extension directory. This extension is a modified version of the vscode-extempore 0.0.9 extension; an additional command "Connect beatclay" was added. 
 
 ## Getting Started
 Once you have setup everything, open the examples folder in your vscode editor.
