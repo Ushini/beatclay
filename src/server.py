@@ -30,7 +30,7 @@ import time
 import socket 
 
 server_IP = sys.argv[1] 
-sensor_PORT = sys.argv[2] 
+sensor_PORT = int(sys.argv[2])
 address = (server_IP, sensor_PORT)
 vol_range = 50
 min_volume = 50
@@ -41,7 +41,6 @@ num_connections = 0
 
 sensor_data_buff = np.zeros((3,6))
 threads = []
-sensor_connected = False
 extemp_PORT = 5005
 extemp_address = (server_IP, extemp_PORT)
 extemp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

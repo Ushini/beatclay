@@ -11,6 +11,10 @@ import opn = require('opn');
 import { xtmIndent, xtmTopLevelSexpr, xtmGetBlock } from './sexpr';
 
 export function activate(context: vscode.ExtensionContext) {
+    // *** added by Ushini Attanayake 25.02.19 ***
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.bcconnect', () => bcConnect()));
+    // *******************************************
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.xtmstart', () => startExtemporeInTerminal()));
@@ -108,59 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(indentDisposable2);
 
     }
-    let handleBcConnection = vscode.commands.registerCommand('extension.bcconnect', () => {
-        let _bcSocket: net.Socket;
-        let bcPort = 5005
-        let bcIP = "172.20.10.3"
-        _bcSocket = new net.Socket();
-        _bcSocket.setEncoding('ascii');
-        _bcSocket.setKeepAlive(true);
-    
-        // set socket callbacks
-        _bcSocket.connect(bcPort, bcIP, () => {
-            vscode.window.showInformationMessage(`Connected to beatclay server on port ${bcPort}`);
-        });
-        _bcSocket.on('data', (data) => {
-            let params = data.toString('utf8').split(" ");
-            let tempCode = ""
-            let volCode = ""
-            vscode.window.setStatusBarMessage(data.toString());
-            if (parseInt(params[0]) < 180 && parseInt(params[0]) > 10) {
-                tempCode = "(*metro* 'set-tempo "+params[0]+")"
-                vscode.window.setStatusBarMessage(tempCode);
-            }
-            if (parseInt(params[0]) > 180) {
-                tempCode = "(*metro* 'set-tempo 180)"
-                vscode.window.setStatusBarMessage(tempCode);
-            }
-            if (parseInt(params[0]) < 10) {
-                tempCode = "(*metro* 'set-tempo 10)"
-                vscode.window.setStatusBarMessage(tempCode);
-            }
-            if (parseInt(params[1]) < 100 && parseInt(params[1]) > 10) {
-                volCode = "(set! vol1 "+params[1]+")"
-                vscode.window.setStatusBarMessage(volCode);
-            }
-            if (parseInt(params[1]) > 100) {
-                volCode = "(set! vol1 100)"
-                vscode.window.setStatusBarMessage(volCode);
-            }
-            if (parseInt(params[1]) < 10) {
-                volCode = "(set! vol1 10)"
-                vscode.window.setStatusBarMessage(volCode);
-            }
-            vscode.window.showInformationMessage(tempCode + ", " + volCode);
-            sendToProcess(tempCode)
-            sendToProcess(volCode)
-        });
-        _bcSocket.on('close', () => {
-            vscode.window.setStatusBarMessage(`Disconnected from beatclay server on port ${bcPort} closed`);
-        });
-        _bcSocket.on('error', (err) => {
-            vscode.window.showErrorMessage(`beatclay: socket connection error "${err.message}"`);
-        })
-    });
-    context.subscriptions.push(handleBcConnection);
+
 }
 
 export function dispose() {
@@ -265,6 +217,59 @@ let connectExtempore = (hostname: string, port: number) => {
     })
 }
 
+// *** added by Ushini Attanayake 25.02.19 ***
+let handleBcConnection = (bcIP: string, bcPort: number) => {
+    let _bcSocket: net.Socket;
+    _bcSocket = new net.Socket();
+    _bcSocket.setEncoding('ascii');
+    _bcSocket.setKeepAlive(true);
+
+    // set socket callbacks
+    _bcSocket.connect(bcPort, bcIP, () => {
+        vscode.window.showInformationMessage(`Connected to beatclay server on port ${bcPort}`);
+    });
+    _bcSocket.on('data', (data) => {
+        let params = data.toString('utf8').split(" ");
+        let tempCode = ""
+        let volCode = ""
+        vscode.window.setStatusBarMessage(data.toString());
+        if (parseInt(params[0]) < 280 && parseInt(params[0]) > 10) {
+            tempCode = "(*metro* 'set-tempo "+params[0]+")"
+            vscode.window.setStatusBarMessage(tempCode);
+        }
+        if (parseInt(params[0]) > 280) {
+            tempCode = "(*metro* 'set-tempo 280)"
+            vscode.window.setStatusBarMessage(tempCode);
+        }
+        if (parseInt(params[0]) < 10) {
+            tempCode = "(*metro* 'set-tempo 10)"
+            vscode.window.setStatusBarMessage(tempCode);
+        }
+        if (parseInt(params[1]) < 100 && parseInt(params[1]) > 10) {
+            volCode = "(set! vol1 "+params[1]+")"
+            vscode.window.setStatusBarMessage(volCode);
+        }
+        if (parseInt(params[1]) > 100) {
+            volCode = "(set! vol1 100)"
+            vscode.window.setStatusBarMessage(volCode);
+        }
+        if (parseInt(params[1]) < 10) {
+            volCode = "(set! vol1 10)"
+            vscode.window.setStatusBarMessage(volCode);
+        }
+        vscode.window.showInformationMessage(tempCode + ", " + volCode);
+        sendToProcess(tempCode)
+        sendToProcess(volCode)
+    });
+    _bcSocket.on('close', () => {
+        vscode.window.setStatusBarMessage(`Disconnected from beatclay server on port ${bcPort} closed`);
+    });
+    _bcSocket.on('error', (err) => {
+        vscode.window.showErrorMessage(`beatclay: socket connection error "${err.message}"`);
+    })
+}
+// ******************************************
+
 // connect to extempore with defaults
 let connectDefaultCommand = () => {
     const config = vscode.workspace.getConfiguration("extempore");
@@ -278,3 +283,12 @@ let connectCommand = async () => {
     let port: number = parseInt(portString);
     connectExtempore(hostname, port);
 };
+
+// *** added by Ushini Attanayake 25.02.19 ***
+let bcConnect = async () => {
+    let IP: string = await vscode.window.showInputBox({ prompt: 'Server IP'});
+    let portString: string = await vscode.window.showInputBox({ prompt: 'Port number', value: '5005'});
+    let port: number = parseInt(portString);
+    handleBcConnection(IP, port);
+};
+// ******************************************

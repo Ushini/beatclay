@@ -16,7 +16,7 @@ There are three components to this project. The microcontroller client-code, the
 - Python 3.6.3
     - pip
     - pipenv
-    - numpy 
+    - numpy 1.16.1
 - Node.js for vscode extension install
 - Extempore Live Coding environment
 - CH340G driver for Lolin microcontroller OR CP2101 driver for the Amica board
@@ -40,7 +40,7 @@ Begin by cloning the repository.
 2. Run `pip install pipenv` to install pipenv.
 2. Create a virtual env with Python 3.6.3 by running the following command within the src directory. 
     `pipenv --python 3.6.3`
-3. Activate your virtual environment with `pipenv shell` and install numpy with `pip install numpy`.
+3. Activate your virtual environment with `pipenv shell` and install numpy with `pip install 'numpy==1.16.1'`.
 
 #### Extension Setup
 1. Install [vscode].
@@ -52,7 +52,7 @@ Once you have setup everything, open the examples folder in your vscode editor.
 
 1. Start an Extempore session in your editor and evaluate the code in the setup.xtm file and the synthLoop.xtm file.
 2. From within the src directory, activate the virtual environment with `pipenv shell` and run `python server.py "<IP address of server>" <client connection port>` from the command line.
-3. Open the command pallete within your editor and type "beatclay connect".
+3. Open the command pallete within your editor and type and select the command "Connect beatclay". You will then be prompted to enter the server's IP address and the port. This is the same IP argument you run the python script with. The default port is 5005.
 4. Switch on your devices and voila, you're good to go.
 
 
